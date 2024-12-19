@@ -1,0 +1,17 @@
+/* Ajouter des styles personnalisés pour améliorer l'apparence */
+.container {
+    max-width: 900px;
+  }
+  
+  .card-header {
+    background-color: #f8f9fa;
+  }
+  
+  .btn-primary, .btn-secondary {
+    margin-bottom: 10px;
+  }
+  
+  .table {
+    margin-top: 20px;
+  }
+  

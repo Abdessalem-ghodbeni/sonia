@@ -1,0 +1,98 @@
+<div class="p-5 mt-5 d-flex-justify-content-center align-items-center">
+  <div class="payment-container">
+    <div class="row d-flex justify-content-center align-items-center p-2">
+      <div class="col-12 col-md-5">
+        <img src="assets/Payment-.png" class="img-fluid w-100" alt="" />
+      </div>
+      <div class="col-12 col-md-7">
+        <h2>Paiement</h2>
+        <p>
+          Veuillez saisir le montant à payer et confirmer que vous acceptez
+          notre politique d'utilisation. Cliquez sur le bouton pour générer un
+          lien de paiement sécurisé.
+        </p>
+        <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+          <div class="input-group">
+            <label for="montant">Montant à payer :</label>
+            <input
+              type="number"
+              id="montant"
+              formControlName="montant"
+              placeholder="Entrez le montant"
+            />
+            <div
+              *ngIf="
+                paymentForm.get('montant')?.invalid &&
+                paymentForm.get('montant')?.touched
+              "
+            >
+              <small class="error"
+                >Le montant est requis et doit être supérieur à 0.</small
+              >
+            </div>
+          </div>
+          <div class="checkbox-container">
+            <input type="checkbox" id="terms" formControlName="terms" />
+            <label for="terms"
+              >J'accepte les <a href="#">conditions d'utilisation</a>.</label
+            >
+            <div
+              *ngIf="
+                paymentForm.get('terms')?.invalid &&
+                paymentForm.get('terms')?.touched
+              "
+            >
+              <small class="error"
+                >Vous devez accepter les conditions d'utilisation.</small
+              >
+            </div>
+          </div>
+          <button type="submit" [disabled]="paymentForm.invalid">
+            Commencer le paiement
+          </button>
+        </form>
+
+        <div *ngIf="paymentLink" class="payment-link">
+          <p>Lien de paiement généré :</p>
+          <a [href]="paymentLink" target="_blank">{{ paymentLink }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal fade"
+  [class.show]="showModal"
+  [style.display]="showModal ? 'block' : 'none'"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Paiement sécurisé</h5>
+        <button
+          type="button"
+          class="close"
+          (click)="closeModal()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Votre lien de paiement a été généré avec succès !</p>
+        <a [href]="paymentLinkExtracted" target="_blank" class="btn btn-primary"
+          >Continuer vers le paiement</a
+        >
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">
+          Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

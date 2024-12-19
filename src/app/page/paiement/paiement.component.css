@@ -1,0 +1,88 @@
+.payment-container {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  max-width: 80%;
+  margin: 2rem auto;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+p {
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.input-group {
+  margin-top: 1.5rem;
+}
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  color: #444;
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.checkbox-container {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-container input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+button {
+  width: 100%;
+  padding: 0.8rem;
+  background: #84fab0;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: white;
+  font-weight: bold;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+button:hover:enabled {
+  background: #62e3a2;
+}
+
+.payment-link {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #f4f4f4;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.payment-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.payment-link a:hover {
+  text-decoration: underline;
+}
