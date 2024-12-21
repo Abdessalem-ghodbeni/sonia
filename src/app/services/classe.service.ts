@@ -3,12 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Classe } from '../Modeles/classe';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ClasseService {
-  private baseUrl = 'http://localhost:8080';     
+  private baseUrl = 'http://localhost:8080';
 
   constructor(private http: HttpClient) {}
 
@@ -17,20 +16,29 @@ export class ClasseService {
   }
 
   getClasse(id: number): Observable<Classe> {
-    const url = `${this. baseUrl}/${id}`;
+    const url = `${this.baseUrl}/${id}`;
     return this.http.get<Classe>(`${this.baseUrl}/getClasse/${id}`);
   }
 
   addClasse(classe: Classe): Observable<Classe> {
-    return this.http.post<Classe>(`${this.baseUrl}/add-classe`, classe); 
+    return this.http.post<Classe>(`${this.baseUrl}/add-classe`, classe);
   }
 
-   updateClasse(id:number,classe: Classe): Observable<Classe> {
-   return this.http.put<Classe>(`${this.baseUrl}/update-classe/${id}`, classe);
-   }
+  updateClasse(id: number, classe: Classe): Observable<Classe> {
+    return this.http.put<Classe>(`${this.baseUrl}/update-classe/${id}`, classe);
+  }
 
   deleteClasse(id: number): Observable<Classe> {
-     const url = `${this. baseUrl}/${id}`;
-     return this.http.delete<Classe>(`${this.baseUrl}/deleteClassse/${id}`, { responseType: 'text' as 'json' });
+    const url = `${this.baseUrl}/${id}`;
+    return this.http.delete<Classe>(`${this.baseUrl}/deleteClassse/${id}`, {
+      responseType: 'text' as 'json',
+    });
+  }
+
+  inscrireEtudiantToClasse(id: number, idClasse: number): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/etudiant/accept/${id}/${idClasse}`,
+      {}
+    );
   }
 }

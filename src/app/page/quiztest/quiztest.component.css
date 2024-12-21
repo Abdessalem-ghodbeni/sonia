@@ -1,0 +1,137 @@
+.custumer_btn_style {
+  width: 50%;
+  height: 40%;
+  padding: 2px;
+  border: 0.5px solid;
+  text-align: center;
+  background-color: #ffbc3b;
+  border-radius: 40px;
+} /* Offcanvas de base */
+/* Offcanvas de base */
+.custom-offcanvas {
+  position: fixed;
+  top: -100%; /* Caché par défaut */
+  left: 0;
+  width: 100%;
+  min-height: 30vh; /* 30% de la hauteur de la fenêtre */
+  max-height: 100vh; /* Limite la hauteur maximale à la hauteur totale de la fenêtre */
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: top 0.3s ease;
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Pour éviter les débordements */
+}
+
+/* Offcanvas affiché */
+.custom-offcanvas.show {
+  top: 0; /* Apparaît en haut de l'écran */
+}
+
+/* Header du Offcanvas */
+.offcanvas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Corps du Offcanvas */
+.offcanvas-body {
+  flex-grow: 1;
+  padding: 1rem;
+  overflow-y: auto; /* Ajoute un défilement si le contenu dépasse */
+}
+
+/* Bouton "fermer" */
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+  .custom-offcanvas {
+    min-height: 40vh; /* Un peu plus grand sur mobile */
+  }
+}
+.quiz-stepper {
+  width: 50%;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.step {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  text-align: center;
+  margin: 0 5px;
+  background-color: #f9f9f9;
+  font-weight: bold;
+  color: #333;
+}
+
+.step.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.propositions label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+}
+
+.quiz-results-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-results-container h3 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+}
+
+.quiz-results-container .summary p {
+  font-size: 1.2rem;
+}
+
+.list-group-item {
+  background-color: #fff;
+  margin-bottom: 8px;
+  border-radius: 5px;
+}
+
+.list-group-item .text-success {
+  font-weight: bold;
+  color: #28a745;
+}
+
+.list-group-item .text-danger {
+  font-weight: bold;
+  color: #dc3545;
+}

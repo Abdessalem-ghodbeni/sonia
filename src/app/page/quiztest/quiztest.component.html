@@ -22,86 +22,197 @@
     </div>
   </div>
 </section>
-<div class="container mt-4" *ngIf="resultat && !resultatquiz">
-  <h3>Quiz {{ resultat?.type }}</h3>
-  <strong
-    >Question {{ currentQuestionIndex + 1 }} sur
-    {{ resultat?.quizQuestions.length }} :</strong
-  >
-  <br />
+<div class="container my-5 p-2">
+  <div class="text-center">
+    @if(showResults!=true){
+    <h2 class="text-center text-warning">Liste des Quiz associé a ce cours</h2>
+    <p class="text-bold">
+      Voici la liste des quiz associés à votre cours, classés par ordre
+      décroissant selon leur date de création. Pour commencer un quiz, il vous
+      suffit de cliquer sur <strong>"Lancer le quiz"</strong> et vous pourrez
+      immédiatement démarrer le test.
+    </p>
+    <p class="text-warning text-bold">
+      <strong
+        >Notez que chaque question est chronométrée : si vous dépassez le temps
+        imparti, la question sera automatiquement notée avec un score de 0. Nous
+        vous souhaitons bonne chance dans votre test et sommes ravis de vous
+        accompagner dans votre parcours académique !</strong
+      >
+    </p>
 
-  <div class="mt-2">
-    <div *ngIf="resultat.quizQuestions.length > 0">
-      <div *ngFor="let question of resultat.quizQuestions; let i = index">
-        <div *ngIf="i === currentQuestionIndex">
-          <h6>{{ question?.title }} / ({{ question?.points }} pts)</h6>
-          <p>Temps restant : {{ timeRemaining }} secondes</p>
+    }@else {
 
-          <div *ngFor="let proposition of question.quizPropositions">
-            <label>
+    <h2 class="text-center text-warning">
+      Résultat de votre test Mr {{ nomUserFromLocaleStorage }}
+    </h2>
+    <p class="text-bold">
+      Voici votre résultat de test. Nous avons analysé vos réponses et généré un
+      résumé pour vous aider à mieux comprendre votre performance. Merci d'avoir
+      participé !"
+    </p>
+
+    }
+  </div>
+
+  @if (showResults==false) {
+
+  <div *ngIf="resultat.length > 0" class="table-responsive">
+    <table class="table table-bordered border-warning">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Type</th>
+          <th scope="col">Coefficient</th>
+          <th scope="col">Date</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let quiz of resultat; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ quiz.type }}</td>
+          <td>{{ quiz.coeif }}</td>
+          <td>{{ quiz.lastUpdated_at }}</td>
+          <td>
+            <button class="custumer_btn_style" (click)="lancerQuiz(quiz.id)">
+              Lancer Quiz
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  }
+
+  <div *ngIf="resultat?.length == 0" class="alert alert-warning" role="alert">
+    Auccun quiz associé a ce cours pour le moment, merci !
+  </div>
+</div>
+@if(showResults==true){
+
+<div class="quiz-container">
+  <div *ngIf="showResults" class="quiz-results-container">
+    <h3 class="text-center text-primary">Résultats du Quiz</h3>
+    <p class="text-center my-3">
+      <strong>{{ resultatquiz?.phrase }}</strong>
+    </p>
+    <div class="summary mb-4">
+      <p><strong>Note :</strong> {{ resultatquiz?.note }}</p>
+      <p><strong>Pourcentage :</strong> {{ resultatquiz?.percentage }}%</p>
+    </div>
+    <h5 class="text-secondary">Détails des réponses :</h5>
+    <ul class="list-group">
+      <li
+        *ngFor="let p of resultatquiz.details"
+        class="list-group-item d-flex justify-content-between align-items-center"
+      >
+        <span
+          ><strong>Question {{ p.questionId }}:</strong>
+          {{ p.propositionDescription }}</span
+        >
+        <span
+          [class.text-success]="p.correct === 'Correct'"
+          [class.text-danger]="p.correct !== 'Correct'"
+        >
+          {{ p.correct }}
+        </span>
+      </li>
+    </ul>
+    <button class="btn btn-outline-wrning my-3" (click)="toggleQuizResults()">
+      {{ showResults ? "Masquer" : "Afficher" }} les Résultats
+    </button>
+  </div>
+</div>
+}
+
+<!-- ggggg -->
+<div class="custom-offcanvas" [class.show]="isOpen">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">
+      Votre quiz a démarré bon chance Mr {{ nomUserFromLocaleStorage }}
+    </h5>
+    <button type="button" class="btn-close" (click)="closeOffcanvas()">
+      ×
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <!-- Quiz affichage -->
+    <div class="quiz-stepper">
+      <div class="step-indicator">
+        <span
+          *ngFor="let question of Quiz_A_Passe?.quizQuestions; let i = index"
+          class="step"
+          [class.active]="i === currentQuestionIndex"
+        >
+          {{ i + 1 }}
+        </span>
+      </div>
+
+      <div *ngIf="Quiz_A_Passe">
+        <h3>Quiz: {{ Quiz_A_Passe.type }}</h3>
+        <strong>
+          Question {{ currentQuestionIndex + 1 }} sur
+          {{ Quiz_A_Passe.quizQuestions.length }}:
+        </strong>
+        <div class="question-container">
+          <h4>{{ Quiz_A_Passe.quizQuestions[currentQuestionIndex]?.title }}</h4>
+          <p>
+            Points:
+            {{ Quiz_A_Passe.quizQuestions[currentQuestionIndex]?.points }}
+          </p>
+          <p>Temps restant: {{ timeRemaining }} secondes</p>
+          <div class="propositions">
+            <label
+              *ngFor="
+                let proposition of Quiz_A_Passe.quizQuestions[
+                  currentQuestionIndex
+                ]?.quizPropositions
+              "
+            >
               <input
                 type="radio"
-                [name]="'question_' + question.id"
+                [name]="'question_' + currentQuestionIndex"
                 [value]="proposition.id"
                 [disabled]="isAnswerDisabled"
-                (change)="onAnswerSelect(question.id, proposition.id)"
+                (change)="
+                  onAnswerSelect(
+                    Quiz_A_Passe.quizQuestions[currentQuestionIndex].id,
+                    proposition.id
+                  )
+                "
               />
-              {{ proposition?.description }}
+              {{ proposition.description }}
             </label>
           </div>
+        </div>
 
-          <br /><br />
-          <div class="navigation mb-5 mt-2">
-            <!-- Previous Button -->
-            <button
-              class="btn btn-secondary"
-              *ngIf="currentQuestionIndex > 0"
-              (click)="previousQuestion()"
-            >
-              Previous</button
-            >&nbsp;
-
-            <!-- Next Button -->
-            <button
-              class="btn btn-success"
-              *ngIf="currentQuestionIndex < resultat.quizQuestions.length - 1"
-              (click)="nextQuestion()"
-            >
-              Next
-            </button>
-
-            <!-- Submit Button -->
-            <button
-              class="btn btn-primary"
-              *ngIf="currentQuestionIndex === resultat.quizQuestions.length - 1"
-              (click)="submitQuiz()"
-            >
-              Submit
-            </button>
-          </div>
+        <div class="navigation">
+          <button
+            class="btn btn-secondary"
+            *ngIf="currentQuestionIndex > 0"
+            (click)="previousQuestion()"
+          >
+            Précédent
+          </button>
+          <button
+            class="btn btn-success"
+            *ngIf="currentQuestionIndex < Quiz_A_Passe.quizQuestions.length - 1"
+            (click)="nextQuestion()"
+          >
+            Suivant
+          </button>
+          <button
+            class="btn btn-primary"
+            *ngIf="
+              currentQuestionIndex === Quiz_A_Passe.quizQuestions.length - 1
+            "
+            (click)="submitQuiz()"
+          >
+            Soumettre
+          </button>
         </div>
       </div>
     </div>
-  </div>
-</div>
-<div class="containter text-center">
-  <div *ngIf="resultatquiz" class="quiz-results-container p-2 p-md-5">
-    <h3>Résultats du Quiz</h3>
-    <p class="ptest">
-      <strong>{{ resultatquiz?.phrase }}</strong>
-    </p>
-    <p class="ptest"><strong>Note : </strong>{{ resultatquiz?.note }}</p>
-    <p class="ptest">
-      <strong>Pourcentage : </strong>{{ resultatquiz?.percentage }}%
-    </p>
-
-    <h5>Détails des réponses :</h5>
-    <ul>
-      <li *ngFor="let p of resultatquiz.details">
-        <strong>Question {{ p.questionId }}:</strong>
-        <span>{{ p.propositionDescription }}</span> -
-        <span>{{ p.correct }}</span>
-      </li>
-    </ul>
   </div>
 </div>

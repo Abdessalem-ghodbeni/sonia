@@ -51,11 +51,13 @@
             Commencer le paiement
           </button>
         </form>
+        @if(paymentLink){
 
-        <div *ngIf="paymentLink" class="payment-link">
+        <div class="payment-link">
           <p>Lien de paiement généré :</p>
           <a [href]="paymentLink" target="_blank">{{ paymentLink }}</a>
         </div>
+        }
       </div>
     </div>
   </div>

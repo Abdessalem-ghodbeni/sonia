@@ -19,8 +19,13 @@ export class QuiztestComponent implements OnInit {
 
   currentQuestionIndex: number = 0;
   selectedAnswers: any[] = [];
-  resultat: any;
+  resultat!: any;
   id!: number;
+  Quiz_A_Passe!: any;
+  nomUserFromLocaleStorage!: any;
+  resultatquiz: any;
+  showResults: boolean = false; // Pour gérer l'affichage des résultats
+
   constructor(
     private quizformservice: QuizformService,
     private quizreponse: QuizResponseService,
@@ -32,15 +37,47 @@ export class QuiztestComponent implements OnInit {
       this.id = +params['id'];
     });
 
+    const userData = localStorage.getItem('user');
+
+    if (userData) {
+      const parsedUserData = JSON.parse(userData); // Convertir les données en objet JS
+      this.nomUserFromLocaleStorage = parsedUserData.nom; // Affecter le rôle récupéré
+    } else {
+      console.log("Aucune donnée trouvée dans le localStorage pour 'user'.");
+    }
+
     this.getformbyid(this.id);
   }
 
+  toggleQuizResults() {
+    this.showResults = !this.showResults;
+  }
+
+  // getformbyid(id: any): void {
+  //   this.quizformservice.getQuizFormById(id).subscribe({
+  //     next: (res: any) => {
+  //       this.resultat = res;
+  //       console.log('sonia', this.resultat);
+  //       if (this.resultat && Array.isArray(this.resultat.quizQuestions)) {
+  //         this.startTimer();
+  //       }
+  //     },
+  //     error: (err) => console.error('Erreur', err),
+  //   });
+  // }
+
   getformbyid(id: any): void {
     this.quizformservice.getQuizFormById(id).subscribe({
-      next: (res: any) => {
-        this.resultat = res;
-        if (this.resultat && Array.isArray(this.resultat.quizQuestions)) {
-          this.startTimer();
+      next: async (res: any) => {
+        if (res && Array.isArray(res)) {
+          this.resultat = res.sort(
+            (a, b) =>
+              new Date(b.lastUpdated_at).getTime() -
+              new Date(a.lastUpdated_at).getTime()
+          );
+          await console.log('solo', this.resultat.length);
+        } else {
+          this.resultat = [];
         }
       },
       error: (err) => console.error('Erreur', err),
@@ -57,7 +94,7 @@ export class QuiztestComponent implements OnInit {
       } else {
         if (
           this.currentQuestionIndex ===
-          this.resultat.quizQuestions.length - 1
+          this.Quiz_A_Passe?.quizQuestions.length - 1
         ) {
           this.isAnswerDisabled = true;
           console.log('Temps écoulé pour la dernière question.');
@@ -70,7 +107,10 @@ export class QuiztestComponent implements OnInit {
   }
 
   nextQuestion() {
-    if (this.currentQuestionIndex < this.resultat.quizQuestions.length - 1) {
+    if (
+      this.currentQuestionIndex <
+      this.Quiz_A_Passe?.quizQuestions.length - 1
+    ) {
       this.currentQuestionIndex++;
       this.isAnswerDisabled = false; // Réactiver les réponses pour la nouvelle question
       this.startTimer();
@@ -106,7 +146,6 @@ export class QuiztestComponent implements OnInit {
     // this.nextQuestion();
   }
 
-  resultatquiz: any;
   // Fonction pour soumettre le quiz
   submitQuiz() {
     this.clearTimer(); // Arrêter la minuterie
@@ -118,15 +157,38 @@ export class QuiztestComponent implements OnInit {
       propositionResponse: answer.proposition,
     }));
 
-    this.quizreponse.submitQuiz(this.id, quizResponses).subscribe({
+    this.quizreponse.submitQuiz(this.Quiz_A_Passe.id, quizResponses).subscribe({
       next: (res: any) => {
         this.resultatquiz = res;
+        this.showResults = true;
         console.log('Résultats du quiz:', res);
-        // Ici vous pouvez afficher les résultats à l'utilisateur
+        this.closeOffcanvas();
+        this.showResults = true;
       },
       error: (err) => {
         console.error('Erreur lors de la soumission du quiz:', err);
       },
     });
+  }
+
+  lancerQuiz(id: number) {
+    this.quizformservice.getFormulaireQuizSingle(id).subscribe(
+      (response) => {
+        this.Quiz_A_Passe = response as any;
+        this.openOffcanvas();
+      },
+      (error) => {
+        alert('somthing was warrning');
+      }
+    );
+  }
+  isOpen = false;
+
+  openOffcanvas() {
+    this.isOpen = true;
+  }
+
+  closeOffcanvas() {
+    this.isOpen = false;
   }
 }
